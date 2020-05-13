@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<lprovision>
+  <JNDIConfig type="ldap">
+    <FactoryInitial>com.sun.jndi.ldap.LdapCtxFactory</FactoryInitial>
+    <ProviderUrl>ldap://zephir:3389/dc=go2uti,dc=com</ProviderUrl>
+    <Principal> </Principal>
+    <Credentials> </Credentials>
+    <Authentication>simple</Authentication>
+    <SecurityProtocol>none</SecurityProtocol>
+
+    <ObjectFactories>
+      <ObjectFactory>uti.nextgen.lprovision.DirObjectObjectFactory</ObjectFactory>
+    </ObjectFactories>
+
+    <StateFactories>
+      <StateFactory>uti.nextgen.lprovision.DirObjectStateFactory</StateFactory>
+    </StateFactories>
+  </JNDIConfig>
+
+  <DirObjects>
+    <DirObject name="user" subcontext="ou=people">
+      <ObjectClasses>
+        <ObjectClass>top</ObjectClass>
+        <ObjectClass>person</ObjectClass>
+        <ObjectClass>organizationalPerson</ObjectClass>
+        <ObjectClass>inetorgperson</ObjectClass>
+        <ObjectClass>utiperson</ObjectClass>
+      </ObjectClasses>
+
+      <Attributes>
+        <Attribute name="givenname" 
+                   required="no" 
+                   secret="no"
+                   bindname="no"
+                 >
+          <Description>First name</Description>
+        </Attribute>
+        <Attribute name="sn" 
+                   required="no" 
+                   secret="no"
+                   bindname="no"
+                 >
+          <Description>Last name</Description>
+        </Attribute>
+        <Attribute name="cn" 
+                   required="no" 
+                   secret="no"
+                   bindname="no"
+                 >
+          <Description>Common name</Description>
+        </Attribute>
+        <Attribute name="uid" 
+                   required="no" 
+                   secret="no"
+                   bindname="yes"
+                 >
+          <Description>User id</Description>
+        </Attribute>
+        <Attribute name="userpassword" 
+                   required="no" 
+                   secret="yes"
+                   bindname="no"
+                 >
+          <Description>Password</Description>
+        </Attribute>
+        <Attribute name="regioncd"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Region Code</Description>
+        </Attribute>
+        <Attribute name="branchcd"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Branch Code</Description>
+        </Attribute>
+        <Attribute name="countrycd"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Country Code</Description>
+        </Attribute>
+        <Attribute name="cmfcd"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>CMF Code</Description>
+        </Attribute>
+        <Attribute name="participantid"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Participant ID</Description>
+        </Attribute>
+        <Attribute name="employeetype"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Employee Type</Description>
+        </Attribute>
+        <Attribute name="manager"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Manager</Description>
+        </Attribute>
+        <Attribute name="title"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Title</Description>
+        </Attribute>
+        <Attribute name="description"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Description</Description>
+        </Attribute>
+        <Attribute name="facsimiletelephonenumber"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Fax number</Description>
+        </Attribute>
+        <Attribute name="telephonenumber"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Phone number</Description>
+        </Attribute>
+        <Attribute name="mobile"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Mobile number</Description>
+        </Attribute>
+        <Attribute name="homephone"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Home number</Description>
+        </Attribute>
+        <Attribute name="defaultwebserver"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Web Server</Description>
+        </Attribute>
+        <Attribute name="defaultmailserver"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Mail Server</Description>
+        </Attribute>
+        <Attribute name="defaultprinter"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Printer</Description>
+        </Attribute>
+        <Attribute name="mail"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Email address</Description>
+        </Attribute>
+        <Attribute name="pager"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Pager</Description>
+        </Attribute>
+        <Attribute name="passwordexpirationtime"
+                  required="no"
+                  secret="no"
+                  bindname="no">
+          <Description>Password Expiration</Description>
+        </Attribute>
+      </Attributes>
+    </DirObject>
+
+    <DirObject name="group" subcontext="ou=groups">
+      <ObjectClasses>
+        <ObjectClass>top</ObjectClass>
+        <ObjectClass>groupofuniquenames</ObjectClass>
+      </ObjectClasses>
+
+      <Attributes>
+        <Attribute name="cn" 
+                   required="yes" 
+                   secret="no"
+                   bindname="yes">
+          <Description>Common name</Description>
+        </Attribute>
+        <Attribute name="description" 
+                   required="no" 
+                   secret="no"
+                   bindname="no">
+          <Description>Description</Description>
+        </Attribute>
+        <Attribute name="uniquemember" 
+                         required="no" 
+                         secret="no"
+                         bindname="no">
+          <Description>Members</Description>
+        </Attribute>
+      </Attributes>
+    </DirObject>
+  </DirObjects>
+</lprovision>

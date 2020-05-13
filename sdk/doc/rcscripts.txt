@@ -1,0 +1,18 @@
+Configuring custom adapter startup on UNIX
+------------------------------------------
+
+  All adapters come bundled with an init script named as follows:
+
+    init<adapter_name>
+
+  It is located in the bin directory of your adapter installation:
+
+   <utisoft_home>/<adapter_name>/bin
+
+  To install the init script the following commands must be executed as root:
+
+    cp init<adapter_name> /etc/init.d
+    cd /etc/rc3.d
+    ln -s ../init.d/init<adapter_name> init<adapter_name>
+    cd ../rc0.d
+    ln -s ../init.d/init<adapter_name> init<adapter_name>

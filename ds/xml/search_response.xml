@@ -1,0 +1,43 @@
+<?xml version = "1.0"?>
+<dsoperation xmlns="http://www.go2uti.com/dsoperation">
+
+  <credentials>
+    <binddn></binddn>
+    <password></password>
+  </credentials>
+
+  <action type="" subtype=""></action>
+
+  <person dn="">
+    <givenname></givenname>
+    <sn></sn>
+    <cn></cn>
+    <uid></uid>
+    <userpassword></userpassword>
+    <regioncd></regioncd>
+    <branchcd></branchcd>
+    <countrycd></countrycd>
+    <cmfcd></cmfcd>
+    <participantid></participantid>
+    <employeetype></employeetype>
+    <manager></manager>
+    <title></title>
+    <description></description>
+    <facsimiletelephonenumber></facsimiletelephonenumber>
+    <telephonenumber></telephonenumber>
+    <mobile></mobile>
+    <homephone></homephone>
+    <defaultwebserver></defaultwebserver>
+    <defaultmailserver></defaultmailserver>
+    <defaultprinter></defaultprinter>
+    <mail></mail>
+    <pager></pager>
+    <passwordexpirationtime></passwordexpirationtime>
+  </person>
+  
+  <group dn="">
+    <cn></cn>
+    <description></description>
+    <uniquemember></uniquemember>
+  </group>
+</dsoperation>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<SOAPClient>
+  <EndPoints>
+    <EndPoint>
+      <Name>dgServices</Name>
+      <URL>http://tib10:9002/bw/services/ProcessDefinitions/dgServices</URL>
+    </EndPoint>
+  </EndPoints> 
+</SOAPClient>

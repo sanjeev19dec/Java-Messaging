@@ -1,0 +1,5 @@
+#!/bin/sh
+
+CP=../lib/uti_ds.jar:../lib/uti_sdk.jar:$CLASSPATH 
+
+java -classpath $CP uti.nextgen.ds.DsOperationCmdWrapper $1 $2

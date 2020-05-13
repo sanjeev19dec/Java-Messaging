@@ -1,0 +1,25 @@
+#!/bin/sh
+
+AD_HOME=/opt/uti/ds
+MSG=$AD_HOME/.msg
+touch $MSG
+
+INSTANCES=`cd $AD_HOME; ls -d instance*`
+
+for INSTANCE in $INSTANCES; do
+  PID=`cat $AD_HOME/$INSTANCE/log/pid`
+  ACTIVE=`cat $AD_HOME/$INSTANCE/log/active.txt`
+
+  AD_UP=`ps -ef | grep $PID | grep java | awk '{print $2}'`
+
+  if [ -z "$AD_UP" -a "$ACTIVE" = "1" ]; then
+    echo "$INSTANCE down ($PID)" >> $MSG
+  elif [ $ACTIVE = 0 ]; then
+    echo "$INSTANCE not active ($PID)" >> $MSG
+  else
+    echo "$INSTANCE up ($PID)" >> $MSG
+  fi
+done
+
+cat $MSG
+rm $MSG

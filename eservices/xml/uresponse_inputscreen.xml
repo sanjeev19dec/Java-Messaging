@@ -1,0 +1,27 @@
+<?xml version = "1.0"?>
+<uResponseRoot xmlns = "http://www.go2uti.com/xml_response">
+  <uresponse>
+    <inputscreen>
+      <input_field>
+        <fld_cd></fld_cd>
+        <fld_prompt></fld_prompt>
+        <fld_format></fld_format>
+        <fld_width></fld_width>
+        <fld_type></fld_type>
+        <lookup_url></lookup_url>
+        <help_url></help_url>
+        <on_focus></on_focus>
+        <on_blur></on_blur>
+        <on_change></on_change>
+        <on_mouse_over></on_mouse_over>
+        <on_mouse_out></on_mouse_out>
+        <default>
+          <value></value>
+          <display_name></display_name>
+          <selected></selected>
+        </default>
+        <err_ind></err_ind>
+      </input_field>
+    </inputscreen>
+  </uresponse>
+</uResponseRoot>

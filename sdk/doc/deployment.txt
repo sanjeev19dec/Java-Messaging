@@ -1,0 +1,163 @@
+Deployment and installation of custom adapters
+----------------------------------------------
+
+NOTES:  * Windows users can use pscp and putty for secure shell and secure copy
+          access to machines:
+
+            http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+
+        * The adapters require Java 1.4 to run.
+
+1.  Adapter installer directory structure
+-----------------------------------------
+
+  Adapter installers are either .tar.gz files or .zip files containing  at least
+  the following directory structure:
+
+    uti/<adapter_dir>/bin
+    uti/<adapter_dir>/deploy
+    uti/<adapter_dir>/doc
+    uti/<adapter_dir>/instance1/bin
+    uti/<adapter_dir>/instance1/etc
+    uti/<adapter_dir>/instance1/lib
+    uti/<adapter_dir>/instance1/log
+    uti/<adapter_dir>/src
+
+  where "adapter_dir" is the name of your adapter e.g eservices or ds.
+
+  See the building.txt file for instructions on creating distributions
+
+
+2. Adapter user 
+---------------
+
+  Adapters are installed and run as the utisoft user on unix platforms.  
+
+  The utisoft user details are as follows:
+
+    Home:  /opt/uti
+    passwd:  utisoft
+
+  The following environment must be set for the utisoft user:
+
+    # utisoft environment.
+
+    #
+    # TIBCO Environment
+    #
+    TIB_RV_HOME=/opt/tibco/tibrv
+    LD_LIBRARY_PATH=$TIB_RV_HOME/lib
+
+    export TIB_RV_HOME LD_LIBRARY_PATH
+
+    #
+    # Java Environment (Only add this if the system does not have Java 1.4)
+    #
+    JAVA_HOME=$HOME/jre/j2re
+
+    export JAVA_HOME
+
+    #
+    # PATH (Only add this if the system does not have Java 1.4)
+    #
+    PATH=$JAVA_HOME/bin:$PATH
+
+    export PATH
+
+    
+
+3.  Initial adapter install
+---------------------------
+
+  To install an adapter for the first time:
+
+    * Secure copy your adapter distribution to the target host:
+
+        scp <my_dist>.tar.gz utisoft@<target_host>:
+
+    * Secure shell to the target host and unpack the distribution:
+
+        ssh -l utisoft <target_host>
+        cd ../
+        gunzip uti/<my_dist>.tar.gz
+        tar xfv uti/<my_dist>.tar
+
+    * Make the required configuration changes to all configuration files in the
+      etc directory of your distribution. (instance1/etc)
+
+    * Make .bak files of all the configuration files you changed and make sure
+      that they are contained in the "Copy configs" section of the deployment
+      script.  This is so that your configurations are maintained during adapter
+      upgrades.
+
+    * Create additional instances if you configured your adapter to run as a 
+      distributed queue. (This is only if you want to run the DQ on one box)
+
+        cd uti/<adapter_dir>/deploy 
+        ./createinstance.sh 2 1
+        ./createinstance.sh 3 1
+
+      This will create instance 2 and 3 of your adapter and make them both 
+      active.
+   
+    * Start your adapter:
+
+        cd /opt/uti/<adapter_dir>/bin
+        ./startall
+
+    * To verify that the adapter started:
+
+        ./monitor
+
+      if you created three instances the output should look something like this:
+
+        instance1 up
+        instance2 up
+        instance3 up
+
+
+4.  Adapter upgrade or reinstall
+-------------------------------- 
+
+  To upgrade or reinstall an adapter:
+
+    * Secure copy your adapter distribution to the target host:
+
+        scp <my_dist>.tar.gz utisoft@<target_host>:
+
+    * Secure shell to the target host:
+      
+        ssh -l utisoft <target_host>
+    
+    * Stop the running adapter instances:
+
+        cd <adapter_dir>/bin
+        ./stopall 
+
+    * Execute the deploy script:
+
+        cd ../deploy
+        ./deploy.sh 
+
+    * Create additional adapter instances:
+        
+        ./createinstance.sh 2 1
+        ./createinstance.sh 3 1
+
+      This will create instance 2 and 3 of your adapter and make them both 
+      active.
+
+    * Start the new adapter:
+
+        cd ../bin
+        ./startall
+    
+    * To verify that the adapter started:
+
+        ./monitor
+
+      if you created three instances the output should look something like this:
+
+        instance1 up
+        instance2 up
+        instance3 up

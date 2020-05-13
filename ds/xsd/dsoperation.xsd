@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.go2uti.com/dsoperation"
+           xmlns="http://www.go2uti.com/dsoperation"
+           elementFormDefault="qualified">
+
+  <xs:complexType name="credentialsinfo">
+    <xs:sequence>
+      <xs:element name="binddn" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:simpleType name="actiontype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="add"/> 
+      <xs:enumeration value="delete"/> 
+      <xs:enumeration value="modify"/> 
+      <xs:enumeration value="search"/> 
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="actionsubtype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="rebind"/>
+      <xs:enumeration value="add"/>
+      <xs:enumeration value="replace"/>
+      <xs:enumeration value="remove"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="returninfo">
+    <xs:sequence>
+      <xs:element name="attribute" type="xs:string" minOccurs="0" 
+                  maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="actioninfo">
+    <xs:sequence>
+      <xs:element name="return" type="returninfo" minOccurs="0"/> 
+    </xs:sequence>
+
+    <xs:attribute name="type" use="optional" type="actiontype"/>
+    <xs:attribute name="subtype" use="optional" type="actionsubtype"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="personinfo">
+    <xs:sequence>
+      <xs:element name="givenname" type="xs:string" minOccurs="0"/>
+      <xs:element name="sn" type="xs:string" minOccurs="0"/>
+      <xs:element name="cn" type="xs:string" minOccurs="0"/>
+      <xs:element name="uid" type="xs:string" minOccurs="0"/>
+      <xs:element name="userpassword" type="xs:string" minOccurs="0"/>
+      <xs:element name="regioncd" type="xs:string" minOccurs="0"/>
+      <xs:element name="branchcd" type="xs:string" minOccurs="0"/>
+      <xs:element name="countrycd" type="xs:string" minOccurs="0"/>
+      <xs:element name="cmfcd" type="xs:string" minOccurs="0"/>
+      <xs:element name="participantid" type="xs:string" minOccurs="0"/>
+      <xs:element name="employeetype" type="xs:string" minOccurs="0"/>
+      <xs:element name="manager" type="xs:string" minOccurs="0"/>
+      <xs:element name="title" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="facsimiletelephonenumber" 
+                  type="xs:string" minOccurs="0"/>
+      <xs:element name="telephonenumber" type="xs:string" minOccurs="0"/>
+      <xs:element name="mobile" type="xs:string" minOccurs="0"/>
+      <xs:element name="homephone" type="xs:string" minOccurs="0"/>
+      <xs:element name="defaultwebserver" type="xs:string" minOccurs="0"/>
+      <xs:element name="defaultmailserver" type="xs:string" minOccurs="0"/>
+      <xs:element name="defaultprinter" type="xs:string" minOccurs="0"/>
+      <xs:element name="mail" type="xs:string" minOccurs="0"/>
+      <xs:element name="pager" type="xs:string" minOccurs="0"/>
+      <xs:element name="passwordexpirationtime" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+
+    <xs:attribute name="dn" use="optional" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="groupinfo">
+    <xs:sequence>
+      <xs:element name="cn" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="uniquemember" type="xs:string" minOccurs="0" 
+                  maxOccurs="unbounded"/>
+    </xs:sequence>
+
+    <xs:attribute name="dn" use="optional" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="errorinfo">
+    <xs:simpleContent>
+      <xs:extension base="xs:string"/>
+    </xs:simpleContent>
+  </xs:complexType>
+  
+  <xs:element name="dsoperation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="credentials" type="credentialsinfo"/>
+        <xs:element name="action" type="actioninfo"/>
+        <xs:element name="person" type="personinfo" minOccurs="0" 
+                    maxOccurs="unbounded"/>
+        <xs:element name="group" type="groupinfo" minOccurs="0" 
+                    maxOccurs="unbounded"/>
+        <xs:element name="error" type="errorinfo" minOccurs="0"/>
+      </xs:sequence> 
+    </xs:complexType> 
+  </xs:element>
+</xs:schema>

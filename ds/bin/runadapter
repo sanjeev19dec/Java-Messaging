@@ -1,0 +1,20 @@
+#!/bin/sh
+
+RV_JAR=$TIB_RV_HOME/lib/tibrvj.jar
+XERCESIMPL_JAR=../lib/xercesImpl.jar
+XERCESAPI_JAR=../lib/xml-apis.jar
+UTI_SDK_JAR=../lib/uti_sdk.jar
+DS_JAR=../lib/uti_ds.jar
+ACTIVE=`cat ../log/active.txt`
+
+CP=$XERCESIMPL_JAR:$XERCESAPI_JAR:$CLASSPATH:$RV_JAR:$UTI_SDK_JAR:$DS_JAR
+
+LOG_CFG=-Djava.util.logging.config.file=../etc/logging.properties
+
+if [ $ACTIVE = 1 ]; then
+  java -server -classpath $CP $LOG_CFG uti.nextgen.adapter.Adapter ../etc/adapter.xml &
+  echo $! > ../log/pid
+fi
+
+
+exit 0

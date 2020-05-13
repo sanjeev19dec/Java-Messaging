@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<DSConfig>
+  <ProvisionConf>../etc/lprovision.xml</ProvisionConf>
+  <StdResponse>../xml/std_response.xml</StdResponse>
+  <SearchResponse>../xml/search_response.xml</SearchResponse>
+
+  <Search>
+    <Person>
+      <attr>uid</attr>
+      <attr>givenname</attr>
+      <attr>cn</attr>
+      <attr>sn</attr>
+    </Person>
+
+    <Group>
+      <attr>cn</attr>
+      <attr>uniquemember</attr>
+    </Group>
+
+    <Delete>
+      <Person>
+        <attr>uid</attr>
+      </Person>
+    
+      <Group>
+        <attr>cn</attr>
+      </Group>
+    </Delete>
+  </Search>
+</DSConfig>

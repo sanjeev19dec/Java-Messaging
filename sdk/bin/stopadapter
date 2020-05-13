@@ -1,0 +1,9 @@
+#!/bin/sh
+
+PID=`cat ../log/pid`
+
+AD_UP=`ps -ef | grep $PID | grep java | awk '{print $2}'`
+
+if [ -n "$AD_UP" ]; then
+  kill -9 $PID;
+fi

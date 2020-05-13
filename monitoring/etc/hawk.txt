@@ -1,0 +1,57 @@
+#Thu Jul 24 19:06:28 GMT+02:00 2003
+
+#
+# ReportMsgSender variables
+#
+#report_sender_command=/opt/reportmsgsender/bin/reportmsgsender.sh
+#report_sender_command=c:/reportmsgsender/bin/reportmsgsender.bat
+
+#
+# Portal variables
+#
+Portal.version=4.5.1 Build 15.2
+pb_system_name=Portal Builder
+instance=servername
+deployment=deploymentname
+pb_tibreposerver_command=
+pb_jndiserver_command=slapd-server
+pb_jndiserver_start_cmd=/opt/sunone/ldap/slapd-server/start-slapd
+pb_jndiserver_log=/opt/sunone/ldap/slapd-server/logs/errors
+pb_webserver_command=https-server
+pb_webserver_start_cmd=/opt/sunone/www/https-server/start
+pb_webserver_log=/opt/sunone/www/https-server/logs/errors
+pb_dbserver_command=
+
+#
+# ADB adapter
+#
+adb_instance_name=
+adb_instance_id=
+adb_restart_script=
+adb_log_file=
+adb_nt_service_name=
+
+#
+# Custom adapters
+#
+
+#
+# DS Adapter
+#
+ds_monitor_cmd=/opt/uti/ds/bin/monitor
+ds_log=/opt/uti/ds/log/uti_ds0.log
+
+#
+# eServices Adapter
+#
+eservices_monitor_cmd=/opt/uti/eservices/bin/monitor
+eservices_log=/opt/uti/eservices/log/uti_eservices0.log
+
+
+#
+# General variables
+#
+#mail_server=uatlax9.us.go2uti.com
+#mail_recipient=git24hsupport@gitmail1.pta.za.go2uti.com
+mail_server=gitmail1.pta.za.go2uti.com
+mail_recipient=ropperman@uti.co.za

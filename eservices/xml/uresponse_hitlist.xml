@@ -1,0 +1,27 @@
+<?xml version = "1.0"?>
+<uResponseRoot xmlns = "http://www.go2uti.com/xml_response">
+  <uresponse>
+    <resp_type></resp_type>
+    <hitlist>
+      <title></title> 
+      <navigation>
+        <page_no></page_no>
+        <records_found></records_found>
+        <page_length></page_length>
+      </navigation>
+
+      <header>
+        <disp_heading></disp_heading>
+        <disp_width></disp_width>
+        <disp_type></disp_type>
+      </header>
+
+      <row>
+        <col>
+          <url></url>
+          <fval></fval>
+        </col>
+      </row>
+    </hitlist>
+  </uresponse>
+</uResponseRoot>

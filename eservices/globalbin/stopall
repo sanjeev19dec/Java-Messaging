@@ -1,0 +1,11 @@
+#!/bin/sh
+
+AD_HOME=$HOME/eservices
+
+INSTANCES=`cd $AD_HOME; ls -d instance*`
+
+for INSTANCE in $INSTANCES; do
+  cd $AD_HOME/$INSTANCE/bin; ./stopadapter
+  sleep 3
+done
+

@@ -1,0 +1,37 @@
+Building rulebase distributions
+-------------------------------
+
+NOTES:  The system used to build rulebase distributions must have "make"
+        software installed.
+
+Concepts
+--------
+
+  The monitoring package provides rulebases for monitoring the UTi 
+  infrastructure i.e all software and hardware platforms. (Or at least aims to
+  do that at some stage) 
+
+  Not all machines will have the same monitoring requirement.  The mechanism 
+  for building rulebase distributions must be flexible enough to
+  easily build custom distributions. 
+
+  The monitoring package provides a mechanism based on "make".  The Makefile 
+  provided contains many different targets that can be combined to build a 
+  custom rulebase distribution.
+
+
+Makefile targets
+----------------
+
+  This section desribes all the targets in the monitoring Makefile:
+
+    pb_only:  Adds the PB_BasicMonitor rulebase to the distribution. This 
+              enables tracking of webserver logs, portal logs and monitoring of
+              webserver availability.
+
+    pb_jndi_only:  Adds the PB_JNDIServerMonitor rulebase to the distribution.
+                   This enables tracking of JNDI Server logs and monitoring of
+                   JNDI Server availability.
+
+    pb_db_only:  Adds PB_DatabaseServerMonitor rulebase to the distribution.
+            

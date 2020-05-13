@@ -1,0 +1,11 @@
+<?xml version = "1.0"?>
+<dsoperation xmlns="http://www.go2uti.com/dsoperation">
+
+  <credentials>
+    <binddn></binddn>
+    <password></password>
+  </credentials>
+  
+  <action type="" subtype=""></action>
+  <error></error>
+</dsoperation>

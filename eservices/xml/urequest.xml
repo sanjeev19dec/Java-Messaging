@@ -1,0 +1,19 @@
+<?xml version = "1.0"?>
+<urequest>
+  <function_id> </function_id>
+  <participant_id> </participant_id>
+  <profile_id> </profile_id>
+  <context> </context>
+  <req_type> </req_type>
+
+  <hitlist>
+    <navigation>
+      <page_no> </page_no>
+    </navigation>
+  </hitlist>
+
+  <parameter>
+    <field_id> </field_id>
+    <value> </value>
+  </parameter>
+</urequest>

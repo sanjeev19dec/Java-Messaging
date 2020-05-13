@@ -1,0 +1,12 @@
+<?xml version = "1.0"?>
+<uResponseRoot xmlns="http://www.go2uti.com/xml_response">
+  <uresponse>
+    <tree>
+      <node>
+        <label></label>
+        <value></value>
+        <url></url>
+      </node>
+    </tree>
+  </uresponse>
+</uResponseRoot>

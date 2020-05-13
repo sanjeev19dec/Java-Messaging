@@ -1,0 +1,11 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+    su - utisoft -c "cd ds/bin; ./startall"
+    ;;
+
+  stop)
+    su - utisoft -c "cd ds/bin; ./stopall"
+    ;;
+esac

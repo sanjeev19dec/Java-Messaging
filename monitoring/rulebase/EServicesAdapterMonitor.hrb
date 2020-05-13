@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ruleBase>
+	<version>4.0.1</version>
+	<name><![CDATA[EServicesAdapterMonitor]]></name>
+	<schedule></schedule>
+	<author>utisoft on host tib10(196.4.70.17) at 17:48 Wed, Oct 22, 2003</author>
+	<lastModification>utisoft on host tib10(196.4.70.17) at 10:34 Thu, Nov 6, 2003</lastModification>
+	<comment><![CDATA[]]></comment>
+	<rule>
+		<name><![CDATA[Custom:executeForString(command=${External.eservices_monitor_cmd}):90]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.hawk.microagent.Custom]]></microAgentName>
+			<methodName>executeForString</methodName>
+			<dataElement name="command">
+				<dataObject class="java.lang.String" ><![CDATA[${External.eservices_monitor_cmd}]]></dataObject>
+			</dataElement>
+			<interval>90000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(returnString Contains down)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.Contains" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[returnString]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.String" ><![CDATA[down]]></dataObject>
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendAlertHigh(alertMsg=EServices Adapter on ${Internal.Agent Name} has died:   ${returnString}   )]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendAlertMessage</methodName>
+				<dataElement name="message">
+					<dataObject class="COM.TIBCO.hawk.config.rbengine.rulebase.util.AlertHigh" ><![CDATA[EServices Adapter on ${Internal.Agent Name} has died:   ${returnString}   ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performOnceOnly/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=EServices Adapter on ${Internal.Agent Name}  has died:
+
+ ${returnString} , From=EServicesAdapterMonitor, Mail Server=${External.mail_server}, Subject=EServices Adapter has died, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[EServicesAdapterMonitor]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[EServices Adapter has died]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[EServices Adapter on ${Internal.Agent Name}  has died:
+
+ ${returnString} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performOnceOnly/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+				<clearAction>
+					<name><![CDATA[sendNotification(alertMsg=EServices Adapter on ${Internal.Agent Name} is back up:   ${returnString}  )]]></name>
+					<schedule></schedule>
+					<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+					<methodName>sendAlertMessage</methodName>
+					<dataElement name="message">
+						<dataObject class="COM.TIBCO.hawk.config.rbengine.rulebase.util.Notification" ><![CDATA[EServices Adapter on ${Internal.Agent Name} is back up:   ${returnString}  ]]></dataObject>
+					</dataElement>
+					<properties>
+					</properties>
+					<clearAction>true</clearAction>
+				</clearAction>
+				<clearAction>
+					<name><![CDATA[sendMail(CC=, Content=EServices Adapter on ${Internal.Agent Name} is back up: 
+
+ ${returnString}  , From=EServicesAdapterMonitor, Mail Server=${External.mail_server}, Subject=EServices Adapter is back up, To=${External.mail_recipient})]]></name>
+					<schedule></schedule>
+					<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+					<methodName>sendMail</methodName>
+					<dataElement name="To">
+						<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+					</dataElement>
+					<dataElement name="From">
+						<dataObject class="java.lang.String" ><![CDATA[EServicesAdapterMonitor]]></dataObject>
+					</dataElement>
+					<dataElement name="CC">
+						<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+					</dataElement>
+					<dataElement name="Subject">
+						<dataObject class="java.lang.String" ><![CDATA[EServices Adapter is back up]]></dataObject>
+					</dataElement>
+					<dataElement name="Mail Server">
+						<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+					</dataElement>
+					<dataElement name="Content">
+						<dataObject class="java.lang.String" ><![CDATA[EServices Adapter on ${Internal.Agent Name} is back up: 
+
+ ${returnString}  ]]></dataObject>
+					</dataElement>
+					<properties>
+					</properties>
+					<clearAction>true</clearAction>
+				</clearAction>
+			</clearOn>
+		</test>
+	</rule>
+</ruleBase>

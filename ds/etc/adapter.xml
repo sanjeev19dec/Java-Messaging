@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<Adapter>
+  <Communications>
+    <FaultTolerance enable="false">
+      <Service> </Service>
+      <Network> </Network>
+      <Daemon> </Daemon>
+
+      <GroupName>zephir.ldap.group</GroupName>
+      <Weight>1</Weight>
+      <ActiveGoal> </ActiveGoal>
+      <Heartbeat> </Heartbeat>
+      <Preparation> </Preparation>
+      <Activation> </Activation>
+    </FaultTolerance>
+    
+    <Subscriber enable="true" type="rvcmq">
+      <Service> </Service>
+      <Network> </Network>
+      <Daemon> </Daemon>
+
+      <CMName>zephir.ldap.cmq</CMName>
+
+      <CMLedger> </CMLedger>
+      <CMRequestOld>true</CMRequestOld>
+      <CMSyncLedger>true</CMSyncLedger>
+
+      <CMQWorkerWeight> </CMQWorkerWeight>
+      <CMQWorkerTasks> </CMQWorkerTasks>
+      <CMQSchedulerWeight> </CMQSchedulerWeight>
+      <CMQSchedulerHeartbeat> </CMQSchedulerHeartbeat>
+      <CMQSchedulerActivation> </CMQSchedulerActivation>
+
+      <Subject>zephir.ldap.receive</Subject>
+    </Subscriber>
+
+    <Publisher enable="true" type="rv">
+      <Service> </Service>
+      <Network> </Network>
+      <Daemon> </Daemon>
+
+      <CMName> </CMName>
+
+      <CMLedger> </CMLedger>
+      <CMRequestOld>true</CMRequestOld>
+      <CMSyncLedger>true</CMSyncLedger>
+
+      <RequestTimeout> </RequestTimeout>
+      <Subject>zephir.ldap.send</Subject>
+    </Publisher> 
+  </Communications>
+
+  <Queueing>
+    <Listener>
+      <Count>5</Count>
+      <QueueDepth>100</QueueDepth>
+      <WorkerClass>uti.nextgen.ds.DefaultWorker</WorkerClass>
+
+      <WorkerParams>
+        <DSConfig>../etc/ds_config.xml</DSConfig>
+        <Mode>reply</Mode>
+      </WorkerParams>
+    </Listener>
+  </Queueing>
+</Adapter>

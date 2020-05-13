@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ResourcePool name="foo">
+  <MaxSize>10</MaxSize>
+  <InitialSize>5</InitialSize>
+</ResourcePool>

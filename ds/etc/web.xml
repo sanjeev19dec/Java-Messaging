@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <servlet>
+    <servlet-name>DsServlet</servlet-name>
+    <servlet-class>uti.nextgen.ds.web.DsServlet</servlet-class>
+
+    <init-param>
+      <param-name>Config</param-name>
+      <param-value>/etc/dssoap_config.xml</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>UserSuffix</param-name>
+      <param-value>ou=people,dc=go2uti,dc=com</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>NoSuffixDn</param-name>
+      <param-value>cn=directory manager</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>DsServlet</servlet-name>
+    <url-pattern>/controller</url-pattern>
+  </servlet-mapping>
+</web-app>

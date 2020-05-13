@@ -1,0 +1,806 @@
+<?xml version="1.0"?>
+<NextGenAPI>
+  <JDBCConfig name="" number="">
+    <Driver>oracle.jdbc.OracleDriver</Driver>
+    <UserName>bwadm</UserName>
+    <Password>bwadm</Password>
+    <ConnectionString>jdbc:oracle:thin:@git5:1521:UTIFRTD1</ConnectionString>
+  </JDBCConfig>
+
+  <ResourcePool name="jdbc">
+    <MaxSize>20</MaxSize>
+    <InitialSize>10</InitialSize>
+  </ResourcePool>
+
+  <XMLTemplates>
+    <Template>
+      <name>detail</name>
+      <file>../xml/uresponse_detail.xml</file>
+    </Template>
+    <Template>
+      <name>hitlist</name>
+      <file>../xml/uresponse_hitlist.xml</file>
+    </Template>
+    <Template>
+      <name>inputscreen</name>
+      <file>../xml/uresponse_inputscreen.xml</file>
+    </Template>
+    <Template>
+      <name>tree</name>
+      <file>../xml/uresponse_tree.xml</file>
+    </Template>
+  </XMLTemplates>
+
+  <Functions>
+    <Function name="getInputParameters"
+              class="uti.nextgen.eservices.GetInputParameters"
+              requestType="input">
+      <SQL>
+        <Select>
+		SELECT f.field_cd, p.field_id, p.display_prompt, p.display_width, p.default_value,
+	   		nvl(p.display_type,'input') display_type, p.lookup_service_id, p.display_seq,
+			p.on_focus_event, p.on_blur_event, p.on_change_event, p.on_mouse_over_event,p.on_mouse_out_event
+            from profile_input p,service_profile sp, sprofile_par_lnk sppl,field f
+	      where p.field_id = f.field_id and sp.service_id = ? and p.profile_id = ? and sppl.participant_id = ?
+		UNION
+		SELECT f.field_cd, di.field_id, di.display_prompt, di.display_width, di.default_value,
+           		nvl(di.display_type,'input') display_type, di.lookup_service_id, di.display_seq,
+			di.on_focus_event, di.on_blur_event, di.on_change_event, di.on_mouse_over_event,di.on_mouse_out_event
+            from default_input di, field f where di.field_id = f.field_id and di.service_id = ?
+		AND NOT EXISTS
+		(SELECT pi.field_id from profile_input pi,service_profile sp, sprofile_par_lnk spl
+	   		where pi.profile_id = ? and sp.service_id = di.service_id
+			and spl.participant_id = ? and pi.field_id = di.field_id)
+		ORDER BY display_seq
+        </Select>
+      </SQL>
+
+	<DisplayName>
+		select display_heading
+		from default_output
+		where service_id = ?
+		order by display_seq
+	</DisplayName>
+
+      <DefaultCalls>
+        <SQLSelect1>
+		select to_char(sysdate,'DDMONYY') from dual
+     	  </SQLSelect1>
+     	  <SQLSelect2>
+		select to_char(sysdate,'HH24:MI') from dual
+     	  </SQLSelect2>
+     	  <SQLSelect3>
+		select t.value, t.display_name from
+		(select 'ORD' value, 'Order Raised' display_name,  1 display_seq from dual
+		union
+		select 'STA' value, 'Status' display_name,  2 display_seq from dual
+		union
+		select 'ERD' value, 'Expected Ready' display_name,  3 display_seq from dual
+		union
+		select 'ROS' value, 'Required On Site' display_name,  4 display_seq from dual) t
+		order by t.display_seq
+     	  </SQLSelect3>
+     	  <SQLSelect4>
+		select t.value, t.display_name from
+		(select 'BO' value, 'Booking' display_name,  1 display_seq from dual
+		union
+		select 'RV' value, 'Freight Received' display_name,  2 display_seq from dual
+		union
+		select 'STA' value, 'Status' display_name,  3 display_seq from dual) t
+		order by t.display_seq
+     	  </SQLSelect4>
+     	  <SQLSelect5>
+		select t.STATUS_CODE, rtrim(t.STATUS_DESC,'.') from
+		(select '' STATUS_CODE, '' STATUS_DESC, 0 SORT_SEQ
+		from dual union
+		select distinct STATUS_CODE, STATUS_DESC, SORT_SEQ
+		from status_codes@jnb
+		where STATUS_OBJECT = 'HB' and status_type = 'P') t
+		order by t.sort_seq
+     	  </SQLSelect5>
+     	  <SQLSelect6>
+		select t.value, t.display_name from
+		(select '' value, '' display_name, 0 display_seq from dual
+		union
+		select 'A' value, 'Air' display_name,  1 display_seq from dual
+		union
+		select 'O' value, 'Ocean' display_name,  2 display_seq from dual
+		union
+		select 'T' value, 'Trucking/Road' display_name,  3 display_seq from dual
+		union
+		select 'R' value, 'Rail' display_name,  4 display_seq from dual
+		union
+		select 'C' value, 'Courier/Express' display_name,  5 display_seq from dual) t
+		order by t.display_seq
+     	  </SQLSelect6>
+     	  <SQLSelect7>
+		select t.value, t.display_name from
+		(select 'INC' value, 'Include Statuses' display_name,  1 display_seq from dual
+		union
+		select 'EXC' value, 'Exclude Statuses' display_name,  2 display_seq from dual) t
+		order by t.display_seq
+     	  </SQLSelect7>
+     	  <SQLSelect8>
+		select t.value, t.display_name from
+		(select 'STA' value, 'Starts With' display_name,  1 display_seq from dual
+		union
+		select 'EXA' value, 'Exact Match' display_name,  2 display_seq from dual) t
+		order by t.display_seq
+     	  </SQLSelect8>
+     	  <SQLSelect9>
+		select t.value, t.display_name from
+		(select 'ALL' value, 'All' display_name,  1 display_seq from dual
+		union
+		select 'PO' value, 'Purchase Order' display_name,  2 display_seq from dual
+		union
+		select 'SO' value, 'Sales Order' display_name,  2 display_seq from dual) t
+		order by t.display_seq
+     	  </SQLSelect9>
+
+      </DefaultCalls>
+
+      <XMLTemplate>inputscreen</XMLTemplate>
+    </Function>
+    <Function name="getTreeParameters"
+              class="uti.nextgen.eservices.GetTreeParameters"
+              requestType="tree">
+      <SQL>
+        <IsNullSelect>
+          select node_id,
+                 input_field_id,
+                 display_value,
+                 value
+            from default_tree where parent_uservice_id = ? and
+                 parent_node_id is null
+        </IsNullSelect>
+        <NullSelect>
+          select node_id,
+                 input_field_id,
+                 display_value,
+                 value
+            from default_tree where parent_uservice_id = ? and
+                 parent_node_id = ?
+        </NullSelect>
+      </SQL>
+
+      <XMLTemplate>tree</XMLTemplate>
+    </Function>
+    <Function name="getDetailParameters"
+              class="uti.nextgen.eservices.GetDetailParameters"
+              requestType="detail">
+      <SQL>
+        <Select>
+          select s.service_id,
+                 s.request_type
+          from service s,
+               service_group sg
+          where s.service_id = sg.member_service_id and
+                sg.service_id = ?
+          order by sg.service_seq
+        </Select>
+      </SQL>
+
+      <XMLTemplate>detail</XMLTemplate>
+    </Function>
+
+    <Function name="getHitlistParameters"
+              class="uti.nextgen.eservices.GetHitlistParameters"
+              requestType="hitlist,piechart,barchart,barlinechart,header">
+
+      <General>
+        <ModeSearchFieldCode>DOC_HB-DOCUMENT_ID</ModeSearchFieldCode>
+        <AlternateMode>O</AlternateMode>
+        <XMLTemplate>detail</XMLTemplate>
+      </General>
+
+      <SQL>
+        <HasModeSelect>
+          select count(sg.service_id) as scount from
+              service_group sg,
+              service s
+         where sg.service_id = ? and
+               sg.service_id = s.service_id and
+               s.request_type != 'DETAIL'
+        </HasModeSelect>
+        <GetModeSelect>
+          select capture_mode from utiadm.doc_hb
+           where document_id = ?
+        </GetModeSelect>
+        <GetFunctionIdSelect>
+          select sg.member_service_id from service_group sg,
+                                        service s
+          where sg.service_id = ? and
+                sg.member_service_id = s.service_id and
+                s.transport_mode = ?
+        </GetFunctionIdSelect>
+      </SQL>
+
+      <Calls>
+        <Call>
+          <FunctionId>1</FunctionId>
+          <FunctionName>inventorySummary</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>2</FunctionId>
+          <FunctionName>waybillStatement</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>3</FunctionId>
+          <FunctionName>shipmentHistoryStatement</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>4</FunctionId>
+          <FunctionName>CargoStatement</FunctionName>
+        </Call>
+        <Call>
+           <FunctionId>5</FunctionId>
+          <FunctionName>partTrackingStatement</FunctionName>
+        </Call>
+        <Call>
+	    <FunctionId>6</FunctionId>
+	    <FunctionName>historyorderStatement</FunctionName>
+        </Call>
+       <Call>
+          <FunctionId>7</FunctionId>
+	    <FunctionName>expediteShippingStatement</FunctionName>
+        </Call>
+        <Call>
+	  <FunctionId>8</FunctionId>
+	  <FunctionName>shipmentdetailStatement</FunctionName>
+        </Call>
+        <Call>
+        	<FunctionId>9</FunctionId>
+        	<FunctionName>purchaseOrderStatement</FunctionName>
+        </Call>
+        <Call>
+	  <FunctionId>10</FunctionId>
+	  <FunctionName>historyorderlineStatement</FunctionName>
+        </Call>
+        <Call>
+	    <FunctionId>12</FunctionId>
+	    <FunctionName>waybillheaderStatement</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>13</FunctionId>
+          <FunctionName>graphStatement</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>15</FunctionId>
+          <FunctionName>freightCostsStatement</FunctionName>
+        </Call>
+        <Call>
+		   <FunctionId>17</FunctionId>
+		   <FunctionName>waybillShipperConsigneeStatement</FunctionName>
+        </Call>
+        <Call>
+				   <FunctionId>18</FunctionId>
+				   <FunctionName>oceanContainersStatement</FunctionName>
+        </Call>
+
+
+        <Call>
+          <FunctionId>19</FunctionId>
+          <FunctionName>waybillImages</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>20</FunctionId>
+          <FunctionName>CargoStatement</FunctionName>
+        </Call>
+        <Call>
+	  <FunctionId>22</FunctionId>
+	  <FunctionName>prealertinstrheaderStatement</FunctionName>
+        </Call>
+        <Call>
+   	  <FunctionId>23</FunctionId>
+          <FunctionName>purchaseOrderHeader</FunctionName>
+        </Call>
+        <Call>
+	  <FunctionId>24</FunctionId>
+	  <FunctionName>handleinfoheaderStatement</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>25</FunctionId>
+          <FunctionName>POLineHeader</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>28</FunctionId>
+          <FunctionName>waybillDetailsHeader</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>29</FunctionId>
+          <FunctionName>waybillDetailsHeader</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>315</FunctionId>
+          <FunctionName>WaybillCustRefHeader</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>31</FunctionId>
+          <FunctionName>POBuyerDetailsHeader</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>37</FunctionId>
+          <FunctionName>POSupplierDetailsHeader</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>42</FunctionId>
+          <FunctionName>outputreportStatement</FunctionName>
+        </Call>
+       <Call>
+          <FunctionId>43</FunctionId>
+          <FunctionName>orderLinesStatement</FunctionName>
+        </Call>
+        <Call>
+        <FunctionId>45</FunctionId>
+        <FunctionName>waybillDetailStatement</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>314</FunctionId>
+          <FunctionName>waybillStatement</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>1132</FunctionId>
+          <FunctionName>OnOrder_Hitlist</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>1149</FunctionId>
+          <FunctionName>OnOrder_Hitlist</FunctionName>
+        </Call>
+        <Call>
+          <FunctionId>1152</FunctionId>
+          <FunctionName>InWarehouseHitlist</FunctionName>
+        </Call>
+      </Calls>
+    </Function>
+    <Function name="inventorySummary"
+              class="uti.nextgen.eservices.InventorySummary"
+              requestType="inventorySummary">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.LOCATION.UTRAC_CD</Field>
+      </AllowedFields>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="orderStatement"
+              class="uti.nextgen.eservices.OrderStatement"
+              requestType="orderStatement">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.LOCATION.UTRAC_CD</Field>
+      </AllowedFields>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="CargoStatement"
+              class="uti.nextgen.eservices.CargoStatement"
+              requestType="CargoStatement">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="shipmentHistoryStatement"
+              class="uti.nextgen.eservices.ShipmentHistoryStatement"
+              requestType="shipmentHistoryStatement">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="waybillStatement"
+              class="uti.nextgen.eservices.WaybillStatement"
+              requestType="waybillStatement">
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_HB.HB_NO</Field>
+        <Field>UTIADM.DOCUMENT.DOCUMENT_ID</Field>
+        <Field>UTIADM.DOCUMENT.STATUS_CD</Field>
+        <Field>UTIADM.DOC_HB.SHIPMENT_TYPE</Field>
+        <Field>UTIADM.DOC_HB.SERVICE_LEVEL_CD</Field>
+        <Field>RADIO-OPTIONS</Field>
+        <Field>UTIADM.REFERENCE.REFERENCE_VALUE</Field>
+        <Field>UTIADM.REFERENCE.REFERENCE_TYPE_CD</Field>
+        <Field>UTIADM.DOC_HB.CAPTURE_MODE</Field>
+        <Field>UTIADM.SELECT.STARTDATE</Field>
+        <Field>UTIADM.SELECT.ENDDATE</Field>
+        <Field>UTIADM.SELECT.SEARCHDATE</Field>
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="historyorderStatement"
+              class="uti.nextgen.eservices.HistoryOrderStatement"
+              requestType="historyorderStatement">
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_ORDER.DOCUMENT_ID</Field>
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+   	<Function name="expediteShippingStatement"
+    			class="uti.nextgen.eservices.ExpediteShippingStatement"
+    			requestType="expediteShippingStatement">
+
+   		<SQLFile>../etc/base_sql_selects.xml</SQLFile>
+   		<MaxResultSize>20</MaxResultSize>
+
+      <AllowedFields>
+      	<Field>UTIADM.INVENTORY.QTY</Field>
+        <Field>UTIADM.DOCUMENT.DOCUMENT_ID</Field>
+        <Field>UTIADM.DOCUMENT.DOCUMENT_ID</Field>
+        <Field>UTIADM.DOC_HB.CAPTURE_MODE</Field>
+        <Field>UTIADM.DOCUMENT.DOCUMENT_ID</Field>
+        <Field>UTIADM.DOCUMENT.STATUS_CD</Field>
+        <Field>UTIADM.JOURNEY_STOP.ETD</Field>
+        <Field>UTIADM.JOURNEY_STOP.ETA</Field>
+        <Field>UTIADM.JOURNEY_STOP.STOP_VESSEL</Field>
+        <Field>UTIADM.JOURNEY_STOP.STOP_NUMBER</Field>
+        <Field>UTIADM.DOC_LINE.DOC_LINE_ID</Field>
+      </AllowedFields>
+
+  		<XMLTemplate>hitlist</XMLTemplate>
+   	</Function>
+
+    <Function name="shipmentdetailStatement"
+              class="uti.nextgen.eservices.ShipmentDetailStatement"
+              requestType="shipmentdetailStatement">
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_ORDER.DOCUMENT_ID</Field>
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="historyorderlineStatement"
+              class="uti.nextgen.eservices.HistoryOrderLineStatement"
+              requestType="historyorderlineStatement">
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_LINE.DOC_LINE_ID</Field>
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="waybillheaderStatement"
+              class="uti.nextgen.eservices.WaybillHeaderStatement"
+              requestType="waybillheaderStatement">
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>2</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="graphStatement"
+              class="uti.nextgen.eservices.GraphStatement"
+              requestType="graphStatement">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+      <Field>UTIADM.REFERENCE.REFERENCE_VALUE</Field>
+      <Field>UTIADM.REFERENCE.REFERENCE_TYPE_CD</Field>
+      <Field>UTIADM.INVENTORY.CURR_LOCATION_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="freightCostsStatement"
+              class="uti.nextgen.eservices.FreightCostsStatement"
+              requestType="freightCostsStatement">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+      <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+
+    <Function name="prealertinstrheaderStatement"
+              class="uti.nextgen.eservices.PreAlertInstrHeaderStatement"
+              requestType="prealertinstrheaderStatement">
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>1</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="handleinfoheaderStatement"
+              class="uti.nextgen.eservices.HandleInfoHeaderStatement"
+              requestType="handleinfoheaderStatement">
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>1</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="waybillDetailsHeader"
+              class="uti.nextgen.eservices.WaybillDetailsHeader"
+              requestType="waybillDetailsHeader">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="WaybillCustRefHeader"
+              class="uti.nextgen.eservices.WaybillCustRefHeader"
+              requestType="WaybillCustRefHeader">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="POBuyerDetailsHeader"
+              class="uti.nextgen.eservices.POBuyerDetailsHeader"
+              requestType="POBuyerDetailsHeader">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_ORDER.DOCUMENT_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="POSupplierDetailsHeader"
+              class="uti.nextgen.eservices.POSupplierDetailsHeader"
+              requestType="POSupplierDetailsHeader">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.DOC_ORDER.DOCUMENT_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="POLineHeader"
+              class="uti.nextgen.eservices.POLineHeader"
+              requestType="POLineHeader">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+         <Field>UTIADM.DOC_LINE.DOC_LINE_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="outputreportStatement"
+              class="uti.nextgen.eservices.OutputReportStatement"
+              requestType="outputreportStatement">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UAT.PRINT.USER_CD</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="partTrackingStatement"
+	    			class="uti.nextgen.eservices.PurchaseOrderStatement"
+	    			requestType="partTrackingStatement">
+
+	   		<SQLFile>../etc/base_sql_selects.xml</SQLFile>
+	   		<MaxResultSize>20</MaxResultSize>
+
+	   		<AllowedFields>
+
+	   		<Field>UTIADM.REFERENCE.REFERENCE_VALUE</Field>
+	   		<Field>UTIADM.REFERENCE.REFERENCE_TYPE_CD</Field>
+	        <Field>UTIADM.DOCUMENT.DOCUMENT_ID</Field>
+
+	        <Field>UTIADM.DOCUMENT.STATUS_CD</Field>
+	        <Field>UTIADM.DOC_ORDER.ORDER_MODE</Field>
+	        <Field>UTIADM.DOC_LINE.QTY</Field>
+	        <Field>UTIADM.INVENTORY.QTY</Field>
+
+
+	    	</AllowedFields>
+
+	   		<XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="purchaseOrderStatement"
+    			class="uti.nextgen.eservices.PurchaseOrderStatement"
+    			requestType="purchaseOrderStatement">
+
+   		<SQLFile>../etc/base_sql_selects.xml</SQLFile>
+   		<MaxResultSize>20</MaxResultSize>
+
+   		<AllowedFields>
+
+        <Field>UTIADM.DOCUMENT.DOCUMENT_ID</Field>
+        <Field>UTIADM.DOC_ORDER.ORDER_TYPE</Field>
+
+        <Field>UTIADM.DOC_ORDER.RAISED_DATE</Field>
+        <Field>UTIADM.DOC_ORDER.TIMESTAMP</Field>
+        <Field>UTIADM.DOCUMENT.STATUS_CD</Field>
+        <Field>UTIADM.DOCUMENT.STATUS_DATE</Field>
+        <Field>UTIADM.DOC_ORDER.EXPEDITING_PRIORITY</Field>
+		<Field>UTIADM.REFERENCE.REFERENCE_VALUE</Field>
+		<Field>UTIADM.REFERENCE.REFERENCE_TYPE_CD</Field>
+
+    	</AllowedFields>
+
+   		<XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="purchaseOrderHeader"
+	    			class="uti.nextgen.eservices.PurchaseOrderHeader"
+	    			requestType="purchaseOrderHeader">
+
+	   	<SQLFile>../etc/base_sql_selects.xml</SQLFile>
+	   	<MaxResultSize>20</MaxResultSize>
+
+	   	<AllowedFields>
+
+	   	  <Field>UTIADM.DOC_ORDER.DOCUMENT_ID</Field>
+	    </AllowedFields>
+
+	   	<XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="waybillImages"
+              class="uti.nextgen.eservices.WaybillImages"
+              requestType="waybillImages">
+
+      <AllowedFields>
+      	<Field>UTIADM.DOCUMENT.DOCUMENT_ID</Field>
+        <Field>UAT.IMAGE_INFO.FILESIZE</Field>
+        <Field>UAT.IMAGE_INFO.DESCRIPTION</Field>
+        <Field>UAT.IMAGE_INFO.USER_CD</Field>
+        <Field>UAT.IMAGE_INFO.TIMESTAMP</Field>
+        <Field>UAT.CD_TABLE.DESCRIPTION</Field>
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>50</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+    <Function name="orderLinesStatement"
+              class="uti.nextgen.eservices.OrderLinesStatement"
+              requestType="orderLinesStatement">
+
+      <AllowedFields>
+	<Field>UTIADM.DOC_ORDER.DOCUMENT_ID</Field>
+
+
+      </AllowedFields>
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>20</MaxResultSize>
+
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="OnOrder_Hitlist"
+              class="uti.nextgen.eservices.OnOrder_Hitlist"
+              requestType="OnOrder_Hitlist">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.REFERENCE.REFERENCE_TYPE_CD</Field>
+        <Field>UTIADM.REFERENCE.REFERENCE_VALUE</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+    <Function name="InWarehouseHitlist"
+              class="uti.nextgen.eservices.InWarehouseHitlist"
+              requestType="InWarehouseHitlist">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+        <Field>UTIADM.REFERENCE.REFERENCE_TYPE_CD</Field>
+        <Field>UTIADM.REFERENCE.REFERENCE_VALUE</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+	<Function name="waybillShipperConsigneeStatement"
+              class="uti.nextgen.eservices.WaybillShipperConsigneeStatement"
+              requestType="waybillShipperConsigneeStatement">
+
+      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+      <MaxResultSize>600</MaxResultSize>
+
+      <AllowedFields>
+         <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+      </AllowedFields>
+      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+		<Function name="oceanContainersStatement"
+	              class="uti.nextgen.eservices.OceanContainersStatement"
+	              requestType="oceanContainersStatement">
+
+	      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+	      <MaxResultSize>600</MaxResultSize>
+
+	      <AllowedFields>
+	         <Field>UTIADM.DOC_HB.DOCUMENT_ID</Field>
+	      </AllowedFields>
+	      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+
+
+	<Function name="waybillDetailStatement"
+		              class="uti.nextgen.eservices.WaybillDetailStatement"
+		              requestType="waybillDetailStatement">
+
+		      <SQLFile>../etc/base_sql_selects.xml</SQLFile>
+		      <MaxResultSize>600</MaxResultSize>
+
+		      <AllowedFields>
+			<Field>UTIADM.REFERENCE.REFERENCE_TYPE_CD</Field>
+        	<Field>UTIADM.REFERENCE.REFERENCE_VALUE</Field>
+		      </AllowedFields>
+		      <XMLTemplate>hitlist</XMLTemplate>
+    </Function>
+
+  </Functions>
+</NextGenAPI>

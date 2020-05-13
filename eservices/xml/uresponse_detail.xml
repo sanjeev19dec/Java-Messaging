@@ -1,0 +1,11 @@
+<?xml version = "1.0"?>
+<uResponseRoot xmlns = "http://www.go2uti.com/xml_response">
+  <uresponse>
+    <participant_id></participant_id>
+    <function_id></function_id>
+    <profile_id></profile_id>
+    <context></context>
+    <resp_type></resp_type>
+    <javascript></javascript>
+  </uresponse>
+</uResponseRoot>

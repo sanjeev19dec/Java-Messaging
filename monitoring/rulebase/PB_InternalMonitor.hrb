@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ruleBase>
+	<version>4.0.1</version>
+	<name><![CDATA[PB_InternalMonitor]]></name>
+	<schedule></schedule>
+	<author>wchen on host cinderella(10.96.68.215) at 18:10 Fri, Mar 16, 2001</author>
+	<lastModification>utisoft on host pumbaa(196.4.70.130) at 10:44 Fri, Oct 24, 2003</lastModification>
+	<comment><![CDATA[This rule monitors the Webserver/Servlet Engine and internal TIB/PortalBuilder healthiness.]]></comment>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=SOURCE_EXECUTION_TIME, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[SOURCE_EXECUTION_TIME]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalAverageUnit > 10000.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalAverageUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="10000.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> category loading took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name} ): PB Category Loading, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name} ): PB Category Loading]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> category loading took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=CATEGORY_VIEWS_ERROR_COUNT, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[CATEGORY_VIEWS_ERROR_COUNT]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalTotalUnit > 1.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalTotalUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="1.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> error category count accumulated more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name}): PB error content, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name}): PB error content]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> error category count accumulated more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=PAGE_CREATION_TIME, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[PAGE_CREATION_TIME]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalAverageUnit > 20000.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalAverageUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="20000.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> user page creation took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name}): PB page creation, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name}): PB page creation]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> user page creation took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=LDAP_GET_CONN_TIME, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[LDAP_GET_CONN_TIME]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalAverageUnit > 40.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalAverageUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="40.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name} ): PB LDAP Latency, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name} ): PB LDAP Latency]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=LDAP_OBJECT_RETRIEVAL_TIME, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[LDAP_OBJECT_RETRIEVAL_TIME]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalAverageUnit > 10000.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalAverageUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="10000.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message}  , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name} ): PB LDAP Latency, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name} ): PB LDAP Latency]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message}  ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=LDAP_OBJECT_SAVE_TIME, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[LDAP_OBJECT_SAVE_TIME]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalAverageUnit > 15000.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalAverageUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="15000.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name} ): PB LDAP Latency, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name} ): PB LDAP Latency]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=LDAP_RET_CONN_TIME, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[LDAP_RET_CONN_TIME]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalAverageUnit > 40.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalAverageUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="40.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name} ): PB LDAP Latency, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name} ): PB LDAP Latency]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=LDAP_OBJECT_SEARCH_TIME, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[LDAP_OBJECT_SEARCH_TIME]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalAverageUnit > 10000.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalAverageUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="10000.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name} ): PB LDAP Latency, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name} ): PB LDAP Latency]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> ldap latency took more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION:getDetailedSnapshots(Instrument=JDBC_CONNECTION_FAILURE_COUNT, Variant=):600]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.ACTIVEPORTAL.INSTRUMENTATION]]></microAgentName>
+			<methodName>getDetailedSnapshots</methodName>
+			<dataElement name="Instrument">
+				<dataObject class="java.lang.String" ><![CDATA[JDBC_CONNECTION_FAILURE_COUNT]]></dataObject>
+			</dataElement>
+			<dataElement name="Variant">
+				<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+			</dataElement>
+			<interval>600000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(IntervalTotalUnit > 0.0)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[IntervalTotalUnit]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.Double"   value="0.0" />
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendMail(CC=, Content=Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> database connection failure count accumulated more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} , From=PB_InternalMonitor@go2uti.com, Mail Server=${External.mail_server}, Subject=ALERT(${Internal.Agent Name}): PB database connection failure, To=${External.mail_recipient})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendMail</methodName>
+				<dataElement name="To">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_recipient}]]></dataObject>
+				</dataElement>
+				<dataElement name="From">
+					<dataObject class="java.lang.String" ><![CDATA[PB_InternalMonitor@go2uti.com]]></dataObject>
+				</dataElement>
+				<dataElement name="CC">
+					<dataObject class="java.lang.String" ><![CDATA[]]></dataObject>
+				</dataElement>
+				<dataElement name="Subject">
+					<dataObject class="java.lang.String" ><![CDATA[ALERT(${Internal.Agent Name}): PB database connection failure]]></dataObject>
+				</dataElement>
+				<dataElement name="Mail Server">
+					<dataObject class="java.lang.String" ><![CDATA[${External.mail_server}]]></dataObject>
+				</dataElement>
+				<dataElement name="Content">
+					<dataObject class="java.lang.String" ><![CDATA[Agent <${Internal.Agent Name}> detects that for Portal Builder <${External.deployment}>.<${External.instance}> database connection failure count accumulated more than the threshold set.
+
+The test is:
+
+${Internal.Current Test} 
+
+The detailed message is:
+
+${Message} ]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+</ruleBase>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ruleBase>
+	<version>4.0.1</version>
+	<name><![CDATA[ADB_WinServiceMonitor]]></name>
+	<schedule></schedule>
+	<author>utghxh on host hannes(196.4.70.58) at 09:27 Tue, Sep 16, 2003</author>
+	<lastModification>utghxh on host hannes(196.4.70.58) at 09:53 Tue, Sep 16, 2003</lastModification>
+	<comment><![CDATA[]]></comment>
+	<rule>
+		<name><![CDATA[COM.TIBCO.hawk.hma.Services:getServiceStatus(Service=${External.adb_nt_service_name}):120]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.hawk.hma.Services]]></microAgentName>
+			<methodName>getServiceStatus</methodName>
+			<dataElement name="Service">
+				<dataObject class="java.lang.String" ><![CDATA[${External.adb_nt_service_name}]]></dataObject>
+			</dataElement>
+			<interval>120000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(Current State !Equals RUNNING)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.NotEqualsObject" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[Current State]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.String" ><![CDATA[RUNNING]]></dataObject>
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[postCondition(conditionName=${Posted.${External.adb_instance_name}_Alert})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>postCondition</methodName>
+				<dataElement name="condition">
+					<dataObject class="COM.TIBCO.hawk.config.rbengine.rulebase.util.PostedCondition" ><![CDATA[${External.adb_instance_name}_Alert]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performAlways/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearOnFirstFalse/>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.hawk.hma.Services:getServiceStatus(Service=${External.adb_nt_service_name}):120:1]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.hawk.hma.Services]]></microAgentName>
+			<methodName>getServiceStatus</methodName>
+			<dataElement name="Service">
+				<dataObject class="java.lang.String" ><![CDATA[${External.adb_nt_service_name}]]></dataObject>
+			</dataElement>
+			<interval>120000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[((Current State !Equals RUNNING) OR (${Posted.${External.adb_instance_name}_Alert} postedConditionExists ))]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.Or" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.NotEqualsObject" >
+					<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+						<dataObject class="java.lang.String" ><![CDATA[Current State]]></dataObject>
+					</operator>
+					<dataObject class="java.lang.String" ><![CDATA[RUNNING]]></dataObject>
+				</operator>
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+					<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.PostedCondition" >
+						<dataObject class="java.lang.String" ><![CDATA[${External.adb_instance_name}_Alert]]></dataObject>
+					</operator>
+					<dataObject class="java.lang.Integer"   value="0" />
+				</operator>
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[postCondition(conditionName=${Posted.${External.adb_instance_name}_Restarting})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>postCondition</methodName>
+				<dataElement name="condition">
+					<dataObject class="COM.TIBCO.hawk.config.rbengine.rulebase.util.PostedCondition" ><![CDATA[${External.adb_instance_name}_Restarting]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performOnceOnly/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<consequenceAction>
+				<name><![CDATA[[After 300 seconds ] execute(command=${External.adb_restart_script})]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.Custom</microAgentName>
+				<methodName>execute</methodName>
+				<dataElement name="command">
+					<dataObject class="java.lang.String" ><![CDATA[${External.adb_restart_script}]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performOnceOnly/>
+				<escalationTime>300</escalationTime>
+			</consequenceAction>
+			<consequenceAction>
+				<name><![CDATA[[After 300 seconds ] sendAlertMedium(alertMsg=ADB_Adapter restarting)]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendAlertMessage</methodName>
+				<dataElement name="message">
+					<dataObject class="COM.TIBCO.hawk.config.rbengine.rulebase.util.AlertMedium" ><![CDATA[ADB_Adapter restarting]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performOnceOnly/>
+				<escalationTime>300</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearTimer>
+					<second>3600</second>
+				</clearTimer>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[Logfile:onNewLine(logfile=${External.adb_log_file})]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.hawk.microagent.Logfile]]></microAgentName>
+			<methodName>onNewLine</methodName>
+			<dataElement name="logfile">
+				<dataObject class="java.lang.String" ><![CDATA[${External.adb_log_file}]]></dataObject>
+			</dataElement>
+			<interval>0</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[(nextLine Perl5PatternMatch /error/)]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.Perl5PatternMatch" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+					<dataObject class="java.lang.String" ><![CDATA[nextLine]]></dataObject>
+				</operator>
+				<dataObject class="java.lang.String" ><![CDATA[/error/]]></dataObject>
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[sendAlertHigh(alertMsg=ADB_Adapter log contains errors)]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendAlertMessage</methodName>
+				<dataElement name="message">
+					<dataObject class="COM.TIBCO.hawk.config.rbengine.rulebase.util.AlertHigh" ><![CDATA[ADB_Adapter log contains errors]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performOnceOnly/>
+				<escalationTime>0</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearTimer>
+					<second>900</second>
+				</clearTimer>
+			</clearOn>
+		</test>
+	</rule>
+	<rule>
+		<name><![CDATA[COM.TIBCO.hawk.hma.Services:getServiceStatus(Service=${External.adb_nt_service_name}):300]]></name>
+		<schedule></schedule>
+		<overRuling>0</overRuling>
+		<dataSource>
+			<microAgentName><![CDATA[COM.TIBCO.hawk.hma.Services]]></microAgentName>
+			<methodName>getServiceStatus</methodName>
+			<dataElement name="Service">
+				<dataObject class="java.lang.String" ><![CDATA[${External.adb_nt_service_name}]]></dataObject>
+			</dataElement>
+			<interval>300000</interval>
+		</dataSource>
+		<test>
+			<name><![CDATA[((Current State !Equals RUNNING) AND (${Posted.${External.adb_instance_name}_Restarting} postedConditionExists ))]]></name>
+			<schedule></schedule>
+			<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.And" >
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.NotEqualsObject" >
+					<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.RuleData" >
+						<dataObject class="java.lang.String" ><![CDATA[Current State]]></dataObject>
+					</operator>
+					<dataObject class="java.lang.String" ><![CDATA[RUNNING]]></dataObject>
+				</operator>
+				<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.GreaterThan" >
+					<operator class="COM.TIBCO.hawk.config.rbengine.rulebase.operators.PostedCondition" >
+						<dataObject class="java.lang.String" ><![CDATA[${External.adb_instance_name}_Restarting]]></dataObject>
+					</operator>
+					<dataObject class="java.lang.Integer"   value="0" />
+				</operator>
+			</operator>
+			<consequenceAction>
+				<name><![CDATA[[After 300 seconds ] sendAlertHigh(alertMsg=ADB_Adapter restart failed)]]></name>
+				<schedule></schedule>
+				<microAgentName>COM.TIBCO.hawk.microagent.RuleBaseEngine</microAgentName>
+				<methodName>sendAlertMessage</methodName>
+				<dataElement name="message">
+					<dataObject class="COM.TIBCO.hawk.config.rbengine.rulebase.util.AlertHigh" ><![CDATA[ADB_Adapter restart failed]]></dataObject>
+				</dataElement>
+				<properties>
+				</properties>
+				<performOnceOnly/>
+				<escalationTime>300</escalationTime>
+			</consequenceAction>
+			<trueConditionPolicy>
+				<trueCountThreshold>1</trueCountThreshold>
+			</trueConditionPolicy>
+			<clearOn>
+				<clearTimer>
+					<second>3600</second>
+				</clearTimer>
+			</clearOn>
+		</test>
+	</rule>
+</ruleBase>

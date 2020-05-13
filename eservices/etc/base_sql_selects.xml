@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<SQL>
+  <ResponseSelect>
+    select s.service_id, s.request_type
+    from service s, service_group sg
+    where s.service_id = sg.member_service_id and
+          sg.service_id = ?
+          order by sg.service_seq
+  </ResponseSelect>
+
+  <HeaderSelect>
+	select p.display_heading, nvl(p.display_width,0) display_width, p.display_type, p.field_id, p.display_seq
+     		from profile_output p,service_profile sp, sprofile_par_lnk sppl,field f
+     		where p.field_id = f.field_id and sp.service_id = ? and p.profile_id = ? and sppl.participant_id = ?
+	union	
+	select defo.display_heading, nvl(defo.display_width,0) display_width, defo.display_type, defo.field_id, defo.display_seq
+      	from default_output defo where service_id = ?
+	and not exists 							 
+	(select po.field_id from profile_output po,service_profile sp, sprofile_par_lnk spl
+  		where po.profile_id = ? and sp.service_id = defo.service_id
+		and spl.participant_id = ? and po.field_id = defo.field_id)	  
+	order by display_seq
+  </HeaderSelect>
+
+  <TitleSelect>
+    select display_heading from service 
+     where service_id = ?
+  </TitleSelect>
+
+  <PageLengthSelect>
+    select default_page_length from service where service_id = ?
+  </PageLengthSelect>              
+
+  <FieldSelect>
+    select field.field_id,
+           field.display_name,
+           field.owner,
+           field.table_name,
+           field.column_name,
+           field.data_type,
+           field.data_length,
+           field.data_precision,
+           field.field_cd,
+           field.timestamp,
+           field.delete_ind,
+           field.db_function_call,
+           field.db_function_alias,
+	     field.global_local_ind
+      from field,default_output where default_output.service_id = ?
+         and field.field_id = default_output.field_id
+         order by default_output.display_seq
+  </FieldSelect>
+  <SingleFieldSelect>
+    select field_id,
+           display_name,
+           owner,
+           table_name,
+           column_name,
+           data_type,
+           data_length,
+           data_precision,
+	     field_cd,
+	     timestamp,
+	     delete_ind,
+           db_function_call,
+           db_function_alias,
+	     global_local_ind
+      from field where field_cd = ?
+  </SingleFieldSelect>
+  <DrilldownIdSelect>
+    select drilldown_service_id from
+      default_output
+    where service_id = ? and
+          field_id = ?
+  </DrilldownIdSelect>
+  <DrilldownFieldSelect>
+    select f.field_id from
+      field f,
+      service_field_lnk fl
+    where fl.service_id = ? and
+          fl.field_id = f.field_id
+  </DrilldownFieldSelect>
+</SQL>

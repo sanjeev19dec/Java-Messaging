@@ -1,0 +1,57 @@
+Building custom adapter distributions
+-------------------------------------
+
+  This document describes the building process for custom adapters from the 
+  adapter sources.
+
+
+Accessing the build environment
+-------------------------------
+
+  * A linux machine has been configured to serve as a build environment for 
+    custom adapters.  
+
+      Host: impala.pta.za.go2uti.com
+      username:  utisoft
+      password:  utisoft
+
+  * To access the machine you require an ssh client like OpenSSH (for UNIX) or 
+    PuTTY (for Windows)
+
+  
+Obtaining and compiling adapter sources
+---------------------------------------
+
+  * All adapter sources are stored and managed in the perforce depot.  The depot
+    is located at:
+
+      git5.pta.za.go2uti.com:1666
+
+    The adapter sources are located in the //depot/nextgen directory.
+
+  * SSH to impala as the utisoft user and access the src/uti directory:
+
+      ssh -l utisoft impala 
+      cd src/uti
+
+  * Get all head revisions from perforce:
+
+      p4 sync
+
+  * Make sure the sdk core classes are compiled:
+
+      cd sdk
+      make clean
+      make  
+
+  * Compile your adapter:
+
+      cd ../<adapter_dir>
+      make clean
+      make
+
+    Your adapter distribution should be located in a file named as follows:
+
+      uti_<adapter_dir>.tar.gz
+
+  * See the deployment.txt file for instructions on deployment and installation.

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<DSSOAPConfig>
+  <SOAPClient>
+    <EndPoints>
+      <EndPoint>
+        <Name>dgServicesDev</Name>
+        <URL>http://simba:9002/bw/services/ProcessDefinitions/dgServices</URL>
+      </EndPoint>
+      <EndPoint>
+        <Name>dgServicesQC</Name>
+        <URL>http://kiara:9002/bw/services/ProcessDefinitions/dgServices</URL>
+      </EndPoint>
+    </EndPoints>
+  </SOAPClient>
+
+  <DefaultEndPoint>dgServicesDev</DefaultEndPoint>
+  <Template>/opt/uti/ds/instance1/xml/soaptemplate.xml</Template>
+
+  <ResourcePool name="dssoapop">
+    <MaxSize>10</MaxSize>
+    <InitialSize>5</InitialSize>
+  </ResourcePool>
+
+  <DsServlet>
+    <Operations>
+      <Operation>
+        <name>chpword</name>
+        <message>Change Password</message>
+        <template>/jsp/chpword.jsp</template>
+      </Operation>
+      <Operation>
+        <name>pword</name>
+        <message>Enter LDAP Password</message>
+        <template>/jsp/pword.jsp</template>
+      </Operation>
+      <Operation>
+        <name>menu</name>
+        <message>Directory Services</message>
+        <template>/jsp/menu.jsp</template>
+      </Operation>
+      <Operation>
+        <name>grpsearch</name>
+        <message>Search for Users and Groups</message>
+        <template>/jsp/grpsearch.jsp</template>
+      </Operation>
+      <Operation>
+        <name>grpalloc</name>
+        <message>Group Allocations</message>
+        <template>/jsp/grpmod.jsp</template>
+      </Operation>
+      <Operation>
+        <name>grpdealloc</name>
+        <message>Group Deallocations</message>
+        <template>/jsp/grpmod.jsp</template>
+      </Operation>
+    </Operations>
+  </DsServlet>
+</DSSOAPConfig>
